@@ -35,6 +35,8 @@ class ResumoController extends Controller
             'revisao_rapida' => 'nullable|string',
         ]);
 
+        $dados['area'] = $conteudo->area;
+        
         $conteudo->resumos()->create($dados);
 
         return redirect()
