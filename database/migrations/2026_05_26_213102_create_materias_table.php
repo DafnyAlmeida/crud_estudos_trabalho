@@ -16,7 +16,7 @@ return new class extends Migration
             $table->enum('status', ['ativa', 'arquivada'])->default('ativa');
 
             $table->string("nome");
-            $table->text("decricao")->nullable();
+            $table->text("descricao")->nullable();
             $table->string('cor_tema')->nullable();
             $table->string('icone_tema')->nullable();
 

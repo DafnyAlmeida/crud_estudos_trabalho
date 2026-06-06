@@ -26,7 +26,6 @@ return new class extends Migration
             ]);
 
             $table->text('link')->nullable();
-            $table->string('drive_file_id')->nullable();
 
             $table->timestamps();
         });

@@ -5,6 +5,7 @@ use App\Http\Controllers\MateriaController;
 use App\Http\Controllers\ConteudoController;
 use App\Http\Controllers\TarefaController;
 use App\Http\Controllers\ResumoController;
+use App\Http\Controllers\MaterialController;
 
 use Illuminate\Support\Facades\Route;
 
@@ -77,8 +78,6 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/materias/{materia}/conteudos/{conteudo}/resumos', [ResumoController::class, 'store'])
         ->name('store');
 
-        Route::get('/conteudos/{conteudo}/materias', [ResumoController::class, 'show'])->name('show');
-
         Route::get('/materias/{materia}/conteudos/{conteudo}/resumos/{resumo}/edit', [ResumoController::class, 'edit'])
         ->name('edit');
 
@@ -86,6 +85,24 @@ Route::middleware(['auth'])->group(function () {
         ->name('update');
 
         Route::delete('/materias/{materia}/conteudos/{conteudo}/resumos/{resumo}', [ResumoController::class, 'destroy'])
+        ->name('destroy');
+    });
+
+    Route::name('materiais.')->group(function () {
+
+        Route::get('/materias/{materia}/conteudos/{conteudo}/materiais/create', [MaterialController::class, 'create'])
+        ->name('create');
+
+        Route::post('/materias/{materia}/conteudos/{conteudo}/materiais', [MaterialController::class, 'store'])
+        ->name('store');
+
+        Route::get('/materias/{materia}/conteudos/{conteudo}/materiais/{material}/edit', [MaterialController::class, 'edit'])
+        ->name('edit');
+
+        Route::put('/materias/{materia}/conteudos/{conteudo}/materiais/{material}', [MaterialController::class, 'update'])
+        ->name('update');
+
+        Route::delete('/materias/{materia}/conteudos/{conteudo}/materiais/{material}', [MaterialController::class, 'destroy'])
         ->name('destroy');
     });
     

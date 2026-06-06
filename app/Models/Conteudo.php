@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Material;
 
 class Conteudo extends Model
 {
@@ -28,7 +29,7 @@ class Conteudo extends Model
 
     public function materiais()
     {
-        return $this->hasMany(Material::class);
+        return $this->hasMany(Material::class, 'conteudo_id');
     }
 
     public function resumos()
