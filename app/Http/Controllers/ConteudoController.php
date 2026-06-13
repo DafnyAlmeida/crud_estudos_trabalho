@@ -10,6 +10,15 @@ use App\Http\Requests\UpdateConteudoRequest;
 
 class ConteudoController extends Controller
 {
+    // public function index(Materia $materia)
+    // {
+    //     if ((int) $materia->user_id !== (int) Auth::id()) {
+    //         abort(403);
+    //     }
+
+    //     return redirect()->route('materias.show', $materia);
+    // }
+
     public function create(Materia $materia)
     {
         if ((int) $materia->user_id !== (int) Auth::id()) {
