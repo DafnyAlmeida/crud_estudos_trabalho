@@ -13,7 +13,10 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth'])
+    ->scopeBindings()
+    ->group(function () {
+
     Route::get('/dashboard', [MateriaController::class, 'index'])->name('dashboard');
 
     Route::name('materias.')->group(function () {

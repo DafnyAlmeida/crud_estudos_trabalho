@@ -6,37 +6,33 @@ use App\Models\Materia;
 use App\Models\Conteudo;
 use App\Models\Resumo;
 
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\StoreResumoRequest;
+use App\Http\Requests\UpdateResumoRequest;
+
+use App\Http\Controllers\Controller;
 
 class ResumoController extends Controller
 {
-    public function index()
-    {
-        //
-    }
-
     public function create(Materia $materia, Conteudo $conteudo)
     {
+        if ($materia->user_id !== (int) Auth::id()) {
+            abort(403);
+        }
+
+        if ($conteudo->materia_id !== $materia->id) {
+            abort(404);
+        }
+
         return view("resumos.create", compact("materia", "conteudo"));
     }
 
-    public function store(Request $request, Materia $materia, Conteudo $conteudo)
+    public function store(StoreResumoRequest $request, Materia $materia, Conteudo $conteudo)
     {
-        $dados = $request->validate([
-            'nome' => 'required|string|max:255',
-            'area' => 'nullable|string|max:255',
-            'conceito' => 'nullable|string',
-            'caracteristicas' => 'nullable|string',
-            'tipos_classificacoes' => 'nullable|string',
-            'funcoes' => 'nullable|string',
-            'exemplos' => 'nullable|string',
-            'informacoes_importantes' => 'nullable|string',
-            'duvidas' => 'nullable|string',
-            'revisao_rapida' => 'nullable|string',
-        ]);
+        $dados = $request->validated();
 
         $dados['area'] = $conteudo->area;
-        
+
         $conteudo->resumos()->create($dados);
 
         return redirect()
@@ -47,30 +43,28 @@ class ResumoController extends Controller
             ->with('success', 'Resumo criado com sucesso!');
     }
 
-    public function show(string $id)
-    {
-        //
-    }
-
     public function edit(Materia $materia, Conteudo $conteudo, Resumo $resumo)
     {
+        if ($materia->user_id !== (int) Auth::id()) {
+            abort(403);
+        }
+
+        if ($conteudo->materia_id !== $materia->id) {
+            abort(404);
+        }
+
+        if ($resumo->conteudo_id !== $conteudo->id) {
+            abort(404);
+        }
+
         return view("resumos.edit", compact("materia", "conteudo", "resumo"));
     }
 
-    public function update(Request $request, Materia $materia, Conteudo $conteudo, Resumo $resumo)
+    public function update(UpdateResumoRequest $request, Materia $materia, Conteudo $conteudo, Resumo $resumo)
     {
-        $dados = $request->validate([
-            'nome' => 'required|string|max:255',
-            'area' => 'nullable|string|max:255',
-            'conceito' => 'nullable|string',
-            'caracteristicas' => 'nullable|string',
-            'tipos_classificacoes' => 'nullable|string',
-            'funcoes' => 'nullable|string',
-            'exemplos' => 'nullable|string',
-            'informacoes_importantes' => 'nullable|string',
-            'duvidas' => 'nullable|string',
-            'revisao_rapida' => 'nullable|string',
-        ]);
+        $dados = $request->validated();
+
+        $dados['area'] = $conteudo->area;
 
         $resumo->update($dados);
 
@@ -84,10 +78,22 @@ class ResumoController extends Controller
 
     public function destroy(Materia $materia, Conteudo $conteudo, Resumo $resumo)
     {
+        if ($materia->user_id !== Auth::id()) {
+            abort(403);
+        }
+
+        if ($conteudo->materia_id !== $materia->id) {
+            abort(404);
+        }
+
+        if ($resumo->conteudo_id !== $conteudo->id) {
+            abort(404);
+        }
+
         $resumo->delete();
 
         return redirect()
             ->route('conteudos.show', [$materia, $conteudo])
-            ->with('sucesso', 'Resumo excluído com sucesso!');
+            ->with('success', 'Resumo excluído com sucesso!');
     }
 }

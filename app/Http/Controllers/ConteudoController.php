@@ -4,42 +4,26 @@ namespace App\Http\Controllers;
 
 use App\Models\Materia;
 use App\Models\Conteudo;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\StoreConteudoRequest;
+use App\Http\Requests\UpdateConteudoRequest;
 
 class ConteudoController extends Controller
 {
-    public function index()
-    {
-        //
-    }
-
     public function create(Materia $materia)
     {
-        if ($materia->user_id !== auth()->id()) {
+        if ((int) $materia->user_id !== (int) Auth::id()) {
             abort(403);
         }
 
         return view('conteudos.create', compact('materia'));
     }
 
-    public function store(Request $request, Materia $materia)
+    public function store(StoreConteudoRequest $request, Materia $materia)
     {
-        if ($materia->user_id !== auth()->id()) {
-            abort(403);
-        }
+        $dados = $request->validated();
 
-        $dados = $request->validate([
-            'nome' => 'required|string|max:255',
-            'descricao' => 'nullable|string',
-            'area' => 'nullable|string|max:255',
-            'status' => 'required|in:iniciado,nao_iniciado,em_andamento,concluido',
-            'nivel_dificuldade' => 'required|in:basico,intermediario,avancado',
-            'prioridade' => 'required|in:alta,media,baixa',
-        ]);
-
-        $dados['materia_id'] = $materia->id;
-
-        Conteudo::create($dados);
+        $materia->conteudos()->create($dados);
 
         return redirect()
             ->route('materias.show', $materia->id)
@@ -48,41 +32,35 @@ class ConteudoController extends Controller
 
     public function show(Materia $materia, Conteudo $conteudo)
     {
+        if ((int) $materia->user_id !== (int) Auth::id()) {
+            abort(403);
+        }
+
+        if ((int) $conteudo->materia_id !== (int) $materia->id) {
+            abort(404);
+        }
+
         $conteudo->load('tarefas');
+
         return view("conteudos.show", compact('materia', 'conteudo'));
     }
 
     public function edit(Materia $materia, Conteudo $conteudo)
     {
-        if ($materia->user_id !== auth()->id()) {
+        if ((int) $materia->user_id !== (int) Auth::id()) {
             abort(403);
         }
 
-        if ($conteudo->materia_id !== $materia->id) {
+        if ((int) $conteudo->materia_id !== (int) $materia->id) {
             abort(404);
         }
 
         return view('conteudos.edit', compact('materia', 'conteudo'));
     }
 
-    public function update(Request $request, Materia $materia, Conteudo $conteudo)
+    public function update(UpdateConteudoRequest $request, Materia $materia, Conteudo $conteudo)
     {
-        if ($materia->user_id !== auth()->id()) {
-            abort(403);
-        }
-
-        if ($conteudo->materia_id !== $materia->id) {
-            abort(404);
-        }
-
-        $dados = $request->validate([
-            'nome' => 'required|string|max:255',
-            'descricao' => 'nullable|string',
-            'area' => 'nullable|string|max:255',
-            'status' => 'required|in:iniciado,nao_iniciado,em_andamento,concluido',
-            'nivel_dificuldade' => 'required|in:basico,intermediario,avancado',
-            'prioridade' => 'required|in:alta,media,baixa',
-        ]);
+        $dados = $request->validated();
 
         $conteudo->update($dados);
 
@@ -93,12 +71,12 @@ class ConteudoController extends Controller
 
     public function destroy(Materia $materia, Conteudo $conteudo)
     {
-        if ($materia->user_id !== auth()->id()) {
+        if ((int) $materia->user_id !== (int) Auth::id()) {
             abort(403);
         }
 
-        if ($conteudo->materia_id !== $materia->id) {
-            abort(403);
+        if ((int) $conteudo->materia_id !== (int) $materia->id) {
+            abort(404);
         }
 
         $conteudo->delete();

@@ -32,6 +32,11 @@ class Conteudo extends Model
         return $this->hasMany(Material::class, 'conteudo_id');
     }
 
+    public function materials()
+    {
+        return $this->hasMany(Material::class);
+    }
+
     public function resumos()
     {
         return $this->hasMany(Resumo::class);

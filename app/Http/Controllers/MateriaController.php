@@ -2,16 +2,22 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Materia;
+use App\Models\User;
+use App\Http\Requests\StoreMateriaRequest;
+use App\Http\Requests\UpdateMateriaRequest;
+use Illuminate\Support\Facades\Auth;
 
 class MateriaController extends Controller
 {
-
     public function index()
     {
-        $nome_user = auth()->user()->name;
-        $materias = auth()->user()->materias()->latest()->get();
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+
+        $nome_user = $user->name;
+        $materias = $user->materias()->latest()->get();
+
         return view('dashboard', compact("materias", "nome_user"));
     }
 
@@ -20,16 +26,11 @@ class MateriaController extends Controller
         return view("materias.create");
     }
 
-    public function store(Request $request)
+    public function store(StoreMateriaRequest $request)
     {
-        $dados = $request->validate([
-            'nome' => 'required|string|max:255',
-            'descricao' => 'nullable|string',
-            'cor_tema' => 'required|string|max:20',
-            'icone_tema' => 'nullable|string|max:255',
-        ]);
+        $dados = $request->validated();
 
-        $dados['user_id'] = auth()->id();
+        $dados['user_id'] = Auth::id();
         $dados['status'] = 'ativa';
 
         Materia::create($dados);
@@ -41,7 +42,7 @@ class MateriaController extends Controller
 
     public function show(Materia $materia)
     {
-        if ($materia->user_id !== auth()->id()) {
+        if ((int) $materia->user_id !== (int) Auth::id()) {
             abort(403);
         }
 
@@ -50,25 +51,18 @@ class MateriaController extends Controller
         return view('materias.show', compact('materia', 'conteudos'));
     }
 
-    public function edit(string $id)
+    public function edit(Materia $materia)
     {
-        $materia = Materia::findOrFail($id);
-        return view("materias.edit", compact("materia"));
-    }
-
-    public function update(Request $request, Materia $materia)
-    {
-        if ($materia->user_id !== auth()->id()) {
+        if ((int) $materia->user_id !== (int) Auth::id()) {
             abort(403);
         }
 
-        $dados = $request->validate([
-            'nome' => 'required|string|max:255',
-            'descricao' => 'nullable|string',
-            'cor_tema' => 'required|string|max:20',
-            'icone_tema' => 'nullable|string|max:255',
-            'status' => 'required|in:ativa,arquivada',
-        ]);
+        return view("materias.edit", compact("materia"));
+    }
+
+    public function update(UpdateMateriaRequest $request, Materia $materia)
+    {
+        $dados = $request->validated();
 
         $materia->update($dados);
 
@@ -79,7 +73,7 @@ class MateriaController extends Controller
 
     public function destroy(Materia $materia)
     {
-        if ($materia->user_id !== auth()->id()) {
+        if ((int) $materia->user_id !== (int) Auth::id()) {
             abort(403);
         }
 

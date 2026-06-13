@@ -6,7 +6,11 @@ use App\Models\Materia;
 use App\Models\Conteudo;
 use App\Models\Tarefa;
 
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\StoreTarefaRequest;
+use App\Http\Requests\UpdateTarefaRequest;
+
+use App\Http\Controllers\Controller;
 
 class TarefaController extends Controller
 {
@@ -18,21 +22,22 @@ class TarefaController extends Controller
 
     public function create(Materia $materia, Conteudo $conteudo)
     {
+        if ((int) $materia->user_id !== (int) Auth::id()) {
+            abort(403);
+        }
+
+        if ((int) $conteudo->materia_id !== (int) $materia->id) {
+            abort(404);
+        }
+        
         return view("tarefas.create", compact("materia", "conteudo"));
     }
 
-    public function store(Request $request, Materia $materia, Conteudo $conteudo)
+    public function store(StoreTarefaRequest $request, Materia $materia, Conteudo $conteudo)
     {
-        $dados = $request->validate([
-            'titulo' => 'required|string|max:255',
-            'descricao' => 'nullable|string',
-            'status' => 'required|in:a_fazer,fazendo,feito',
-            'prioridade' => 'required|in:baixa,media,alta',
-        ]);
+        $dados = $request->validated();
 
-        $dados['conteudo_id'] = $conteudo->id;
-
-        Tarefa::create($dados);
+        $conteudo->tarefas()->create($dados);
 
         return redirect()
             ->route('conteudos.show', [$materia, $conteudo])
@@ -46,6 +51,18 @@ class TarefaController extends Controller
 
     public function edit(Materia $materia, Conteudo $conteudo, Tarefa $tarefa)
     {
+        if ((int) $materia->user_id !== (int) Auth::id()) {
+            abort(403);
+        }
+
+        if ((int) $conteudo->materia_id !== (int) $materia->id) {
+            abort(404);
+        }
+
+        if ((int) $tarefa->conteudo_id !== (int) $conteudo->id) {
+            abort(404);
+        }
+        
         return view('tarefas.edit', [
             'materia' => $materia,
             'conteudo' => $conteudo,
@@ -53,13 +70,9 @@ class TarefaController extends Controller
         ]);
     }
 
-    public function update(Request $request, Materia $materia, Conteudo $conteudo, Tarefa $tarefa)
+    public function update(UpdateTarefaRequest $request, Materia $materia, Conteudo $conteudo, Tarefa $tarefa)
     {
-        $dados = $request->validate([
-            'titulo' => ['required', 'string', 'max:255'],
-            'descricao' => ['nullable', 'string'],
-            'status' => ['required', 'in:a_fazer,fazendo,feito'],
-        ]);
+        $dados = $request->validated();
 
         $tarefa->update($dados);
 
@@ -73,6 +86,18 @@ class TarefaController extends Controller
 
     public function destroy(Materia $materia, Conteudo $conteudo, Tarefa $tarefa)
     {
+        if ((int) $materia->user_id !== (int) Auth::id()) {
+            abort(403);
+        }
+
+        if ((int) $conteudo->materia_id !== (int) $materia->id) {
+            abort(404);
+        }
+
+        if ((int) $tarefa->conteudo_id !== (int) $conteudo->id) {
+            abort(404);
+        }
+
         $tarefa->delete();
 
         return redirect()

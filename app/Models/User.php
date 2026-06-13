@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
+use App\Models\Materia;
+
 class User extends Authenticatable
 {
     
@@ -47,7 +49,6 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
-
 
     public function materias() {
         return $this->hasMany(Materia::class);
