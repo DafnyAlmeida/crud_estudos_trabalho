@@ -1,25 +1,40 @@
-// import { defineConfig } from 'vite';
-// import laravel from 'laravel-vite-plugin';
-
-// export default defineConfig({
-//     plugins: [
-//         laravel({
-//             input: ['resources/css/app.css', 'resources/js/app.js'],
-//             refresh: true,
-//         }),
-//     ],
-// });
-
 import { defineConfig } from 'vite';
 import laravel from 'laravel-vite-plugin';
+
+const vitePort = 5173;
+
+const isCodespaces = !!process.env.CODESPACE_NAME;
+
+const codespacesHost = isCodespaces
+    ? `${process.env.CODESPACE_NAME}-${vitePort}.${process.env.GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN}`
+    : null;
+
+const localHost = process.env.VITE_DEV_SERVER_HOST || 'localhost';
+
+const devServerHost = isCodespaces ? codespacesHost : localHost;
 
 export default defineConfig({
     server: {
         host: '0.0.0.0',
-        port: 5173,
-        hmr: {
-            host: 'localhost',
-        },
+        port: vitePort,
+        strictPort: true,
+        cors: true,
+
+        origin: isCodespaces
+            ? `https://${devServerHost}`
+            : `http://${devServerHost}:${vitePort}`,
+
+        hmr: isCodespaces
+            ? {
+                protocol: 'wss',
+                host: devServerHost,
+                clientPort: 443,
+            }
+            : {
+                protocol: 'ws',
+                host: devServerHost,
+                clientPort: vitePort,
+            },
     },
 
     plugins: [

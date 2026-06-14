@@ -13,6 +13,10 @@ RUN apt-get update && apt-get install -y \
     libzip-dev \
     && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd zip
 
+# Instala Node.js e npm
+RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
+    && apt-get install -y nodejs
+
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 COPY . .

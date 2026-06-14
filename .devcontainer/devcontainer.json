@@ -7,14 +7,16 @@
     "portsAttributes": {
         "8000": {
             "label": "Laravel",
-            "onAutoForward": "openPreview"
+            "onAutoForward": "openPreview",
+            "protocol": "http"
         },
         "5173": {
-            "label": "Vite"
+            "label": "Vite",
+            "protocol": "http"
         },
         "8081": {
-            "label": "phpMyAdmin"
+            "label": "phpMyAdmin",
+            "protocol": "http"
         }
-    },
-    "postCreateCommand": "composer install && cp .env.example .env && php artisan key:generate"
+    }
 }
