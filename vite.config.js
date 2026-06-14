@@ -9,9 +9,9 @@ const codespacesHost = isCodespaces
     ? `${process.env.CODESPACE_NAME}-${vitePort}.${process.env.GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN}`
     : null;
 
-const localHost = process.env.VITE_DEV_SERVER_HOST || 'localhost';
-
-const devServerHost = isCodespaces ? codespacesHost : localHost;
+const devServerHost = isCodespaces
+    ? codespacesHost
+    : 'localhost';
 
 export default defineConfig({
     server: {

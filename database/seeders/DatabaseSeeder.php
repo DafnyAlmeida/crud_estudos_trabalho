@@ -23,9 +23,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $this->call([
-            MateriaSeeder::class,
-            ConteudoSeeder::class,
+            SistemaEstudosSeeder::class,
         ]);
-
     }
 }
