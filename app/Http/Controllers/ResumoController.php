@@ -14,6 +14,21 @@ use App\Http\Controllers\Controller;
 
 class ResumoController extends Controller
 {
+    public function index(Materia $materia, Conteudo $conteudo)
+    {
+        if ((int) $materia->user_id !== (int) Auth::id()) {
+            abort(403);
+        }
+
+        if ((int) $conteudo->materia_id !== (int) $materia->id) {
+            abort(404);
+        }
+
+        $resumos = $conteudo->resumos()->latest()->get();
+
+        return view('resumos.index', compact('materia', 'conteudo', 'resumos'));
+    }
+
     public function create(Materia $materia, Conteudo $conteudo)
     {
         if ($materia->user_id !== (int) Auth::id()) {
@@ -36,7 +51,7 @@ class ResumoController extends Controller
         $conteudo->resumos()->create($dados);
 
         return redirect()
-            ->route('conteudos.show', [
+            ->route('resumos.index', [
                 'materia' => $materia->id,
                 'conteudo' => $conteudo->id,
             ])
@@ -69,7 +84,7 @@ class ResumoController extends Controller
         $resumo->update($dados);
 
         return redirect()
-            ->route('conteudos.show', [
+            ->route('resumos.index', [
                 'materia' => $materia->id,
                 'conteudo' => $conteudo->id,
             ])
@@ -93,7 +108,7 @@ class ResumoController extends Controller
         $resumo->delete();
 
         return redirect()
-            ->route('conteudos.show', [$materia, $conteudo])
+            ->route('resumos.index', [$materia, $conteudo])
             ->with('success', 'Resumo excluído com sucesso!');
     }
 }

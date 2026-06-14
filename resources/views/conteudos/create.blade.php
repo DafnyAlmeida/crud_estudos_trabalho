@@ -6,20 +6,6 @@
         $corMateria = $materia->cor_tema ?? '#7c3aed';
         $iconeMateria = $materia->icone_tema ?? 'fa-regular fa-file-lines';
 
-        $areas = [
-            'Álgebra',
-            'Geometria',
-            'Funções',
-            'Logaritmos',
-            'Trigonometria',
-            'Estatística',
-            'Morfologia',
-            'Sintaxe',
-            'Literatura',
-            'Redação',
-            'Gramática',
-        ];
-
         $statusLabels = [
             'nao_iniciado' => 'Não iniciado',
             'iniciado' => 'Iniciado',
@@ -183,6 +169,7 @@
                                     <p class="mt-1 text-xs text-red-500">{{ $message }}</p>
                                 @enderror
                             </div>
+
                         </div>
 
                         {{-- NÍVEL E STATUS --}}

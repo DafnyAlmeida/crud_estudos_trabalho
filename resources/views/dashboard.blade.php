@@ -86,7 +86,8 @@
 
                             <form action="{{ route('materias.destroy', $materia->id) }}"
                                   method="POST"
-                                  class="flex-1">
+                                  class="flex-1"
+                                  onsubmit="return confirm('Tem certeza que deseja excluir está matéria?')">
                                 @csrf
                                 @method('DELETE')
 

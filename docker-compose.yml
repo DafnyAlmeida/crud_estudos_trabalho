@@ -1,0 +1,74 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: apexedu_app
+    volumes:
+      - .:/var/www/html
+    depends_on:
+      - mysql
+    networks:
+      - apexedu
+
+  nginx:
+    image: nginx:alpine
+    container_name: apexedu_nginx
+    ports:
+      - "8000:80"
+    volumes:
+      - .:/var/www/html
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - app
+    networks:
+      - apexedu
+
+  mysql:
+    image: mysql:8.0
+    container_name: apexedu_mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: estudos_crud_novo
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_PASSWORD: root
+      MYSQL_USER: apexedu
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - apexedu
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: apexedu_phpmyadmin
+    restart: unless-stopped
+    ports:
+      - "8081:80"
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+    depends_on:
+      - mysql
+    networks:
+      - apexedu
+
+  node:
+    image: node:20-alpine
+    container_name: apexedu_node
+    working_dir: /var/www/html
+    volumes:
+      - .:/var/www/html
+    ports:
+      - "5173:5173"
+    command: sh -c "npm install && npm run dev -- --host 0.0.0.0"
+    networks:
+      - apexedu
+
+volumes:
+  mysql_data:
+
+networks:
+  apexedu:
+    driver: bridge

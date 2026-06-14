@@ -12,7 +12,12 @@ class Tarefa extends Model
         'titulo',
         'descricao',
         'status',
-        'prioridade'
+        'prioridade',
+        'data_entrega',
+    ];
+    
+    protected $casts = [
+        'data_entrega' => 'date',
     ];
 
     public function conteudo(): BelongsTo

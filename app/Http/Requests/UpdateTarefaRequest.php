@@ -28,6 +28,7 @@ class UpdateTarefaRequest extends FormRequest
             'descricao' => 'nullable|string',
             'status' => 'required|in:a_fazer,fazendo,feito',
             'prioridade' => 'required|in:baixa,media,alta',
+            'data_entrega' => 'nullable|date',
         ];
     }
 
@@ -40,6 +41,7 @@ class UpdateTarefaRequest extends FormRequest
             'status.in' => 'O status selecionado é inválido.',
             'prioridade.required' => 'A prioridade da tarefa é obrigatória.',
             'prioridade.in' => 'A prioridade selecionada é inválida.',
+            'data_entrega.date' => 'A data de entrega precisa ser uma data válida.',
         ];
     }
 }

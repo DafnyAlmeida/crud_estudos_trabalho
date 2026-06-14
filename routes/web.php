@@ -55,6 +55,9 @@ Route::middleware(['auth'])
 
     Route::name('tarefas.')->group(function () {
 
+        Route::get('/materias/{materia}/conteudos/{conteudo}/tarefas', [TarefaController::class, 'index'])
+        ->name('index');
+
         Route::get('/materias/{materia}/conteudos/{conteudo}/tarefas/create', [TarefaController::class, 'create'])
         ->name('create');
 
@@ -75,6 +78,9 @@ Route::middleware(['auth'])
 
     Route::name('resumos.')->group(function () {
 
+        Route::get('/materias/{materia}/conteudos/{conteudo}/resumos', [ResumoController::class, 'index'])
+        ->name('index');
+
         Route::get('/materias/{materia}/conteudos/{conteudo}/resumos/create', [ResumoController::class, 'create'])
         ->name('create');
 
@@ -92,6 +98,9 @@ Route::middleware(['auth'])
     });
 
     Route::name('materiais.')->group(function () {
+        
+        Route::get('/materias/{materia}/conteudos/{conteudo}/materiais', [MaterialController::class, 'index'])
+        ->name('index');
 
         Route::get('/materias/{materia}/conteudos/{conteudo}/materiais/create', [MaterialController::class, 'create'])
         ->name('create');

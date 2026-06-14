@@ -46,7 +46,10 @@ class MateriaController extends Controller
             abort(403);
         }
 
-        $conteudos = $materia->conteudos()->latest()->get();
+        $conteudos = $materia->conteudos()
+            ->withCount('tarefas')
+            ->latest()
+            ->get();
 
         return view('materias.show', compact('materia', 'conteudos'));
     }

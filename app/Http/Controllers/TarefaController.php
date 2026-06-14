@@ -15,9 +15,23 @@ use App\Http\Controllers\Controller;
 class TarefaController extends Controller
 {
 
-    public function index()
+    public function index(Materia $materia, Conteudo $conteudo)
     {
-        //
+        if ((int) $materia->user_id !== (int) Auth::id()) {
+            abort(403);
+        }
+
+        if ((int) $conteudo->materia_id !== (int) $materia->id) {
+            abort(404);
+        }
+
+        $tarefas = $conteudo->tarefas()
+            ->orderByRaw('CASE WHEN data_entrega IS NULL THEN 1 ELSE 0 END')
+            ->orderBy('data_entrega')
+            ->latest('created_at')
+            ->get();
+
+        return view('tarefas.index', compact('materia', 'conteudo', 'tarefas'));
     }
 
     public function create(Materia $materia, Conteudo $conteudo)
@@ -40,8 +54,8 @@ class TarefaController extends Controller
         $conteudo->tarefas()->create($dados);
 
         return redirect()
-            ->route('conteudos.show', [$materia, $conteudo])
-            ->with('sucesso', 'Tarefa criada com sucesso!');
+            ->route('tarefas.index', [$materia, $conteudo])
+            ->with('success', 'Tarefa criada com sucesso!');
     }
 
     public function show(string $id)
@@ -77,11 +91,11 @@ class TarefaController extends Controller
         $tarefa->update($dados);
 
         return redirect()
-            ->route('conteudos.show', [
+            ->route('tarefas.index', [
                 'materia' => $materia->id,
                 'conteudo' => $conteudo->id,
             ])
-            ->with('sucesso', 'Tarefa atualizada com sucesso!');
+            ->with('success', 'Tarefa atualizada com sucesso!');
     }
 
     public function destroy(Materia $materia, Conteudo $conteudo, Tarefa $tarefa)
@@ -101,7 +115,7 @@ class TarefaController extends Controller
         $tarefa->delete();
 
         return redirect()
-            ->route('conteudos.show', [$materia, $conteudo])
-            ->with('sucesso', 'Tarefa excluída com sucesso!');
+            ->route('tarefas.index', [$materia, $conteudo])
+            ->with('success', 'Tarefa excluída com sucesso!');
     }
 }

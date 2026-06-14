@@ -12,6 +12,21 @@ use App\Http\Requests\UpdateMaterialRequest;
 
 class MaterialController extends Controller
 {
+    public function index(Materia $materia, Conteudo $conteudo)
+    {
+        if ((int) $materia->user_id !== (int) Auth::id()) {
+            abort(403);
+        }
+
+        if ((int) $conteudo->materia_id !== (int) $materia->id) {
+            abort(404);
+        }
+
+        $materiais = $conteudo->materiais()->latest()->get();
+
+        return view('materiais.index', compact('materia', 'conteudo', 'materiais'));
+    }
+
     public function create(Materia $materia, Conteudo $conteudo)
     {
         if ((int) $materia->user_id !== (int) Auth::id()) {
@@ -32,7 +47,7 @@ class MaterialController extends Controller
         $conteudo->materiais()->create($dados);
 
         return redirect()
-            ->route('conteudos.show', [
+            ->route('materiais.index', [
                 'materia' => $materia->id,
                 'conteudo' => $conteudo->id,
             ])
@@ -75,7 +90,7 @@ class MaterialController extends Controller
         $material->update($dados);
 
         return redirect()
-            ->route('conteudos.show', [
+            ->route('materiais.index', [
                 'materia' => $materia->id,
                 'conteudo' => $conteudo->id,
             ])
@@ -99,7 +114,7 @@ class MaterialController extends Controller
         $material->delete();
 
         return redirect()
-            ->route('conteudos.show', [$materia, $conteudo])
+            ->route('materiais.index', [$materia, $conteudo])
             ->with('success', 'Material excluído com sucesso!');
     }
 }

@@ -23,6 +23,12 @@
             'fa-solid fa-code',
             'fa-solid fa-landmark',
             'fa-regular fa-star',
+            'fa-solid fa-atom',
+            'fa-solid fa-dumbbell',
+            'fa-solid fa-person',
+            'fa-solid fa-map-location',
+            'fa-solid fa-book-atlas',   
+            'fa-solid fa-database',      
         ];
 
         $corSelecionada = old('cor_tema', '#22c55e');
