@@ -36,8 +36,8 @@
         $statusSelecionado = old('status', 'ativa');
     @endphp
 
-    <main class="min-h-screen bg-gray-50 px-5 py-5">
-        <div class="mx-auto max-w-6xl">
+    <main class="min-h-screen bg-white px-6 py-8 lg:px-10">
+        <div class="mx-auto max-w-7xl">
 
             <form action="{{ route('materias.store') }}" method="POST">
                 @csrf
@@ -264,72 +264,75 @@
                     {{-- LATERAL --}}
                     <aside class="space-y-5">
 
-                        {{-- CARD DE PRÉVIA --}}
-                        <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:shadow-md">
+                    {{-- CARD DE PRÉVIA --}}
+                    <div class="flex min-h-[300px] flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:shadow-md">
 
-                            <div class="block p-4">
-                                <div class="mb-4 flex items-start justify-between">
-                                    <div id="cardIconeBox"
-                                         class="flex h-10 w-10 items-center justify-center rounded-xl text-base text-white"
-                                         style="background-color: {{ $corSelecionada }}">
-                                        <i id="cardIcone" class="{{ $iconeSelecionado }}"></i>
-                                    </div>
-
-                                    <span id="cardStatus"
-                                          class="rounded-full bg-green-100 px-3 py-1 text-xs font-semibold text-green-600">
-                                        Ativa
-                                    </span>
+                        <div class="flex flex-1 flex-col p-5">
+                            <div class="mb-5 flex items-start justify-between">
+                                <div id="cardIconeBox"
+                                    class="flex h-12 w-12 items-center justify-center rounded-xl text-lg text-white"
+                                    style="background-color: {{ $corSelecionada }}">
+                                    <i id="cardIcone" class="{{ $iconeSelecionado }}"></i>
                                 </div>
 
-                                <h2 id="cardNome" class="text-lg font-semibold text-slate-900">
-                                    Biologia
-                                </h2>
+                                <span id="cardStatus"
+                                    class="rounded-full bg-green-100 px-3 py-1 text-xs font-medium text-green-600">
+                                    Ativa
+                                </span>
+                            </div>
 
-                                <p id="cardDescricao" class="mt-1 text-xs leading-5 text-slate-500">
-                                    Descrição da matéria aparecerá aqui.
-                                </p>
+                            <h2 id="cardNome" class="text-xl font-semibold text-slate-900">
+                                Biologia
+                            </h2>
 
-                                <div class="mt-4 border-t border-slate-100 pt-3">
-                                    <div class="mb-2 flex justify-between text-xs">
-                                        <span class="text-slate-500">Progresso</span>
+                            <p id="cardDescricao" class="mt-2 line-clamp-3 min-h-[50px] text-sm leading-5 text-slate-500">
+                                Descrição da matéria aparecerá aqui.
+                            </p>
 
-                                        <span id="cardProgressoTexto" class="font-semibold" style="color: {{ $corSelecionada }};">
-                                            0%
-                                        </span>
-                                    </div>
+                            <div class="mt-6 border-t border-slate-100 pt-4">
+                                <div class="flex items-center justify-between gap-4">
 
-                                    <div class="h-1.5 overflow-hidden rounded-full bg-slate-100">
-                                        <div id="cardBarra"
-                                             class="h-full rounded-full"
-                                             style="width: 0%; background-color: {{ $corSelecionada }};">
-                                        </div>
-                                    </div>
-
-                                    <div class="mt-3 flex items-center gap-2 text-xs text-slate-500">
+                                    <div class="flex items-center gap-2 text-sm text-slate-500">
                                         <span id="cardConteudosIcone"
-                                              class="flex h-6 w-6 items-center justify-center rounded-lg"
-                                              style="color: {{ $corSelecionada }}; background-color: {{ $corSelecionada }}18;">
-                                            <i class="fa-regular fa-file-lines text-[10px]"></i>
+                                            class="flex h-8 w-8 items-center justify-center rounded-lg"
+                                            style="color: {{ $corSelecionada }}; background-color: {{ $corSelecionada }}18;">
+                                            <i class="fa-regular fa-file-lines text-xs"></i>
                                         </span>
 
                                         <span>0 conteúdos</span>
                                     </div>
+
+                                    <div class="flex items-center gap-2 text-sm text-slate-500">
+                                        <span>0 tarefas</span>
+
+                                        <span id="cardTarefasIcone"
+                                            class="flex h-8 w-8 items-center justify-center rounded-lg"
+                                            style="color: {{ $corSelecionada }}; background-color: {{ $corSelecionada }}18;">
+                                            <i class="fa-regular fa-square-check text-xs"></i>
+                                        </span>
+                                    </div>
+
                                 </div>
-                            </div>
-
-                            <div class="flex border-t border-slate-100">
-                                <p class="flex flex-1 items-center justify-center gap-2 border-r border-slate-100 py-2.5 text-xs font-medium text-violet-600">
-                                    <i class="fa-regular fa-pen-to-square"></i>
-                                    Editar
-                                </p>
-
-                                <p class="flex flex-1 items-center justify-center gap-2 py-2.5 text-xs font-medium text-red-500">
-                                    <i class="fa-regular fa-trash-can"></i>
-                                    Excluir
-                                </p>
                             </div>
                         </div>
 
+                        <div class="mt-auto grid grid-cols-3 border-t border-slate-100">
+                            <p class="flex h-12 items-center justify-center gap-2 border-r border-slate-100 text-sm font-medium text-violet-600">
+                                <i class="fa-regular fa-pen-to-square"></i>
+                                Editar
+                            </p>
+
+                            <p class="flex h-12 items-center justify-center gap-2 border-r border-slate-100 text-sm font-medium text-slate-700">
+                                <i class="fa-regular fa-eye"></i>
+                                Visualizar
+                            </p>
+
+                            <p class="flex h-12 items-center justify-center gap-2 text-sm font-medium text-red-500">
+                                <i class="fa-regular fa-trash-can"></i>
+                                Excluir
+                            </p>
+                        </div>
+                    </div>
                         {{-- DICAS --}}
                         <section class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
                             <div class="mb-4 flex items-center gap-3">
@@ -425,8 +428,7 @@
         const cardDescricao = document.getElementById('cardDescricao');
         const cardIcone = document.getElementById('cardIcone');
         const cardIconeBox = document.getElementById('cardIconeBox');
-        const cardBarra = document.getElementById('cardBarra');
-        const cardProgressoTexto = document.getElementById('cardProgressoTexto');
+        const cardTarefasIcone = document.getElementById('cardTarefasIcone');
         const cardConteudosIcone = document.getElementById('cardConteudosIcone');
         const cardStatus = document.getElementById('cardStatus');
 
@@ -447,10 +449,12 @@
 
         function atualizarCor(cor) {
             cardIconeBox.style.backgroundColor = cor;
-            cardBarra.style.backgroundColor = cor;
-            cardProgressoTexto.style.color = cor;
+
             cardConteudosIcone.style.color = cor;
             cardConteudosIcone.style.backgroundColor = `${cor}18`;
+
+            cardTarefasIcone.style.color = cor;
+            cardTarefasIcone.style.backgroundColor = `${cor}18`;
         }
 
         function atualizarIcone(icone) {

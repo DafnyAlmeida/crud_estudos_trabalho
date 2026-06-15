@@ -2,7 +2,9 @@
     @php
         $statusSelecionado = old('status', 'nao_iniciado');
         $nivelSelecionado = old('nivel_dificuldade', 'intermediario');
+        $prioridadeSelecionada = old('prioridade', 'media');
         $areaSelecionada = old('area', '');
+
         $corMateria = $materia->cor_tema ?? '#7c3aed';
         $iconeMateria = $materia->icone_tema ?? 'fa-regular fa-file-lines';
 
@@ -18,15 +20,19 @@
             'intermediario' => 'Intermediário',
             'avancado' => 'Avançado',
         ];
+
+        $prioridadeLabels = [
+            'baixa' => 'Baixa',
+            'media' => 'Média',
+            'alta' => 'Alta',
+        ];
     @endphp
 
-    <main class="min-h-screen bg-gray-50 px-5 py-5">
-        <div class="mx-auto max-w-6xl">
+    <main class="min-h-screen bg-white px-6 py-8 lg:px-10">
+        <div class="mx-auto max-w-7xl">
 
             <form id="form-conteudo" action="{{ route('conteudos.store', $materia->id) }}" method="POST">
                 @csrf
-
-                <input type="hidden" name="prioridade" value="media">
 
                 {{-- CABEÇALHO --}}
                 <div class="mb-5 flex items-start justify-between gap-5">
@@ -169,12 +175,12 @@
                                     <p class="mt-1 text-xs text-red-500">{{ $message }}</p>
                                 @enderror
                             </div>
-
                         </div>
 
-                        {{-- NÍVEL E STATUS --}}
-                        <div class="mt-5 grid grid-cols-1 gap-5 md:grid-cols-[0.8fr_1.2fr]">
+                        {{-- NÍVEL E PRIORIDADE --}}
+                        <div class="mt-5 grid grid-cols-1 gap-5 md:grid-cols-2">
 
+                            {{-- NÍVEL DE DIFICULDADE --}}
                             <div>
                                 <label for="nivel_dificuldade" class="text-sm font-bold text-slate-900">
                                     Nível de dificuldade
@@ -203,34 +209,64 @@
                                 @enderror
                             </div>
 
+                            {{-- PRIORIDADE --}}
                             <div>
-                                <p class="text-sm font-bold text-slate-900">
-                                    Status do estudo <span class="text-red-500">*</span>
-                                </p>
+                                <label for="prioridade" class="text-sm font-bold text-slate-900">
+                                    Prioridade <span class="text-red-500">*</span>
+                                </label>
 
-                                <div class="mt-2 grid grid-cols-2 overflow-hidden rounded-xl border border-slate-200 bg-white p-1 md:grid-cols-4">
-                                    @foreach($statusLabels as $valor => $label)
-                                        <label class="cursor-pointer">
-                                            <input
-                                                type="radio"
-                                                name="status"
-                                                value="{{ $valor }}"
-                                                class="peer sr-only"
-                                                @checked($statusSelecionado === $valor)
-                                            >
+                                <select
+                                    name="prioridade"
+                                    id="prioridade"
+                                    class="mt-2 w-full rounded-xl border-slate-200 px-3 py-2.5 text-sm text-slate-700 shadow-sm focus:border-purple-500 focus:ring-purple-500"
+                                >
+                                    <option value="baixa" @selected($prioridadeSelecionada === 'baixa')>
+                                        Baixa
+                                    </option>
 
-                                            <span class="flex items-center justify-center gap-2 rounded-lg px-2 py-2 text-xs font-semibold text-slate-500 transition peer-checked:bg-purple-100 peer-checked:text-purple-600">
-                                                <i class="fa-regular fa-circle"></i>
-                                                {{ $label }}
-                                            </span>
-                                        </label>
-                                    @endforeach
-                                </div>
+                                    <option value="media" @selected($prioridadeSelecionada === 'media')>
+                                        Média
+                                    </option>
 
-                                @error('status')
+                                    <option value="alta" @selected($prioridadeSelecionada === 'alta')>
+                                        Alta
+                                    </option>
+                                </select>
+
+                                @error('prioridade')
                                     <p class="mt-1 text-xs text-red-500">{{ $message }}</p>
                                 @enderror
                             </div>
+                        </div>
+
+                        {{-- STATUS --}}
+                        <div class="mt-5">
+                            <p class="text-sm font-bold text-slate-900">
+                                Status do estudo <span class="text-red-500">*</span>
+                            </p>
+
+                            <div class="mt-2 grid grid-cols-2 overflow-hidden rounded-xl border border-slate-200 bg-white p-1 md:grid-cols-4">
+                                @foreach($statusLabels as $valor => $label)
+                                    <label class="cursor-pointer">
+                                        <input
+                                            type="radio"
+                                            name="status"
+                                            value="{{ $valor }}"
+                                            class="peer sr-only"
+                                            @checked($statusSelecionado === $valor)
+                                        >
+
+                                        <span class="flex items-center justify-center gap-2 rounded-lg px-2 py-2 text-xs font-semibold text-slate-500 transition peer-checked:bg-purple-100 peer-checked:text-purple-600">
+                                            <i class="fa-regular fa-circle"></i>
+                                            {{ $label }}
+                                        </span>
+                                    </label>
+                                @endforeach
+                            </div>
+
+                            @error('status')
+                                <p class="mt-1 text-xs text-red-500">{{ $message }}</p>
+                            @enderror
                         </div>
                     </section>
 
@@ -247,49 +283,42 @@
                                 Assim que salvar, seu conteúdo aparecerá assim no painel.
                             </p>
 
-                            <div class="mt-5 rounded-2xl border border-slate-200 bg-white p-4">
-                                <div class="flex gap-4">
-                                    <div class="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-purple-100 text-2xl text-purple-600">
+                            <div class="mt-5 overflow-hidden rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+                                <div class="mb-5 flex items-start justify-between">
+                                    <div class="flex h-12 w-12 items-center justify-center rounded-xl text-lg text-white"
+                                         style="background-color: {{ $corMateria }}">
                                         <i class="fa-regular fa-file-lines"></i>
                                     </div>
 
-                                    <div class="min-w-0 flex-1">
-                                        <div class="flex items-start justify-between gap-3">
-                                            <h3 id="previewNome" class="truncate text-base font-bold text-slate-950">
-                                                Orações coordenadas
-                                            </h3>
-
-                                            <span id="previewStatus" class="shrink-0 rounded-full bg-blue-100 px-3 py-1 text-xs font-semibold text-blue-600">
-                                                Não iniciado
-                                            </span>
-                                        </div>
-
-                                        <div class="mt-3 flex flex-wrap items-center gap-2">
-                                            <span id="previewArea" class="rounded-full bg-purple-100 px-3 py-1 text-xs font-semibold text-purple-600">
-                                                Área
-                                            </span>
-
-                                            <span id="previewNivel" class="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600">
-                                                Intermediário
-                                            </span>
-                                        </div>
-
-                                        <p id="previewDescricao" class="mt-3 line-clamp-2 text-xs leading-5 text-slate-500">
-                                            A descrição do conteúdo aparecerá aqui.
-                                        </p>
-                                    </div>
+                                    <span id="previewStatus"
+                                          class="shrink-0 rounded-full bg-blue-100 px-3 py-1 text-xs font-medium text-blue-700">
+                                        Não iniciado
+                                    </span>
                                 </div>
 
-                                <div class="mt-4 flex items-center justify-between border-t border-slate-100 pt-3 text-xs text-slate-500">
-                                    <div class="flex items-center gap-2">
-                                        <i class="fa-regular fa-clipboard"></i>
-                                        <span>0 tarefas</span>
-                                    </div>
+                                <h3 id="previewNome" class="text-xl font-semibold leading-snug text-slate-950">
+                                    Orações coordenadas
+                                </h3>
 
-                                    <div class="flex items-center gap-2">
-                                        <i class="fa-regular fa-clock"></i>
-                                        <span>Estimativa: —</span>
-                                    </div>
+                                <p id="previewDescricao" class="mt-2 line-clamp-3 text-sm leading-5 text-slate-500">
+                                    A descrição do conteúdo aparecerá aqui.
+                                </p>
+
+                                <div class="mt-5 flex flex-wrap gap-2 border-b border-slate-100 pb-5">
+                                    <span id="previewArea"
+                                          class="rounded-full bg-green-100 px-3 py-1 text-xs font-medium text-green-700">
+                                        Área: Não definida
+                                    </span>
+
+                                    <span id="previewNivel"
+                                          class="rounded-full bg-yellow-100 px-3 py-1 text-xs font-medium text-yellow-700">
+                                        Nível de dificuldade: Intermediário
+                                    </span>
+
+                                    <span id="previewPrioridade"
+                                          class="rounded-full bg-orange-100 px-3 py-1 text-xs font-medium text-orange-700">
+                                        Prioridade: Média
+                                    </span>
                                 </div>
                             </div>
 
@@ -371,6 +400,7 @@
         const inputDescricao = document.getElementById('descricao');
         const inputArea = document.getElementById('area');
         const inputNivel = document.getElementById('nivel_dificuldade');
+        const inputPrioridade = document.getElementById('prioridade');
 
         const contadorNome = document.getElementById('contadorNome');
         const contadorDescricao = document.getElementById('contadorDescricao');
@@ -379,6 +409,7 @@
         const previewDescricao = document.getElementById('previewDescricao');
         const previewArea = document.getElementById('previewArea');
         const previewNivel = document.getElementById('previewNivel');
+        const previewPrioridade = document.getElementById('previewPrioridade');
         const previewStatus = document.getElementById('previewStatus');
 
         const statusTexto = {
@@ -392,6 +423,12 @@
             'basico': 'Básico',
             'intermediario': 'Intermediário',
             'avancado': 'Avançado',
+        };
+
+        const prioridadeTexto = {
+            'baixa': 'Baixa',
+            'media': 'Média',
+            'alta': 'Alta',
         };
 
         function atualizarContadores() {
@@ -408,24 +445,48 @@
         }
 
         function atualizarArea() {
-            previewArea.textContent = inputArea.value || 'Área';
+            previewArea.textContent = `Área: ${inputArea.value || 'Não definida'}`;
         }
 
         function atualizarNivel() {
-            previewNivel.textContent = nivelTexto[inputNivel.value] || 'Intermediário';
+            const nivel = nivelTexto[inputNivel.value] || 'Intermediário';
+
+            previewNivel.textContent = `Nível de dificuldade: ${nivel}`;
+
+            if (inputNivel.value === 'basico') {
+                previewNivel.className = 'rounded-full bg-green-100 px-3 py-1 text-xs font-medium text-green-700';
+            } else if (inputNivel.value === 'avancado') {
+                previewNivel.className = 'rounded-full bg-red-100 px-3 py-1 text-xs font-medium text-red-700';
+            } else {
+                previewNivel.className = 'rounded-full bg-yellow-100 px-3 py-1 text-xs font-medium text-yellow-700';
+            }
+        }
+
+        function atualizarPrioridade() {
+            const prioridade = prioridadeTexto[inputPrioridade.value] || 'Média';
+
+            previewPrioridade.textContent = `Prioridade: ${prioridade}`;
+
+            if (inputPrioridade.value === 'baixa') {
+                previewPrioridade.className = 'rounded-full bg-blue-100 px-3 py-1 text-xs font-medium text-blue-700';
+            } else if (inputPrioridade.value === 'alta') {
+                previewPrioridade.className = 'rounded-full bg-red-100 px-3 py-1 text-xs font-medium text-red-700';
+            } else {
+                previewPrioridade.className = 'rounded-full bg-orange-100 px-3 py-1 text-xs font-medium text-orange-700';
+            }
         }
 
         function atualizarStatus(status) {
             previewStatus.textContent = statusTexto[status] || 'Não iniciado';
 
             if (status === 'concluido') {
-                previewStatus.className = 'shrink-0 rounded-full bg-green-100 px-3 py-1 text-xs font-semibold text-green-600';
+                previewStatus.className = 'shrink-0 rounded-full bg-green-100 px-3 py-1 text-xs font-medium text-green-700';
             } else if (status === 'em_andamento') {
-                previewStatus.className = 'shrink-0 rounded-full bg-purple-100 px-3 py-1 text-xs font-semibold text-purple-600';
+                previewStatus.className = 'shrink-0 rounded-full bg-yellow-100 px-3 py-1 text-xs font-medium text-yellow-700';
             } else if (status === 'iniciado') {
-                previewStatus.className = 'shrink-0 rounded-full bg-orange-100 px-3 py-1 text-xs font-semibold text-orange-600';
+                previewStatus.className = 'shrink-0 rounded-full bg-orange-100 px-3 py-1 text-xs font-medium text-orange-700';
             } else {
-                previewStatus.className = 'shrink-0 rounded-full bg-blue-100 px-3 py-1 text-xs font-semibold text-blue-600';
+                previewStatus.className = 'shrink-0 rounded-full bg-blue-100 px-3 py-1 text-xs font-medium text-blue-700';
             }
         }
 
@@ -441,6 +502,7 @@
 
         inputArea.addEventListener('change', atualizarArea);
         inputNivel.addEventListener('change', atualizarNivel);
+        inputPrioridade.addEventListener('change', atualizarPrioridade);
 
         document.querySelectorAll('input[name="status"]').forEach(function (input) {
             input.addEventListener('change', function () {
@@ -453,6 +515,7 @@
         atualizarDescricao();
         atualizarArea();
         atualizarNivel();
+        atualizarPrioridade();
 
         const statusInicial = document.querySelector('input[name="status"]:checked');
 

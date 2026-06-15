@@ -27,4 +27,16 @@ class Materia extends Model
     {
         return $this->hasMany(Conteudo::class);
     }
+
+    public function tarefas()
+    {
+        return $this->hasManyThrough(
+            Tarefa::class,
+            Conteudo::class,
+            'materia_id',
+            'conteudo_id',
+            'id',
+            'id'
+        );
+    }
 }

@@ -18,6 +18,10 @@ class MateriaController extends Controller
         $nome_user = $user->name;
         $materias = $user->materias()->latest()->get();
 
+        $materias = Materia::where('user_id', Auth::id())
+            ->withCount(['conteudos', 'tarefas'])
+            ->get();
+
         return view('dashboard', compact("materias", "nome_user"));
     }
 
@@ -47,7 +51,7 @@ class MateriaController extends Controller
         }
 
         $conteudos = $materia->conteudos()
-            ->withCount('tarefas')
+            ->withCount(['tarefas', 'materiais', 'resumos'])
             ->latest()
             ->get();
 

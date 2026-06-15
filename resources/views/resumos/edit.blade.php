@@ -71,7 +71,7 @@
         ];
     @endphp
 
-    <main class="min-h-screen bg-gray-50 px-5 py-5">
+    <main class="min-h-screen bg-white px-6 py-8 lg:px-10">
         <div class="mx-auto max-w-7xl">
 
             <form id="form-resumo" action="{{ route('resumos.update', [$materia->id, $conteudo->id, $resumo->id]) }}" method="POST">
@@ -212,50 +212,50 @@
                     </div>
                 </section>
 
-                {{-- PRÉ-VISUALIZAÇÃO EMBAIXO --}}
-                <section class="mt-6 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-                    <div class="mb-8 flex items-center justify-between gap-5">
+                {{-- PRÉ-VISUALIZAÇÃO --}}
+                <section class="mt-6 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+                    <div class="mb-6 flex items-center justify-between gap-4">
                         <div>
-                            <h2 id="previewNome" class="text-2xl font-bold text-slate-950">
+                            <h2 id="previewNome" class="text-xl font-semibold text-slate-950">
                                 {{ old('nome', $resumo->nome) ?: 'Resumo sem título' }}
                             </h2>
 
-                            <p class="mt-2 text-sm text-slate-500">
+                            <p class="mt-1 text-xs text-slate-500">
                                 Pré-visualização do resumo editado.
                             </p>
                         </div>
 
-                        <div class="flex items-center gap-3">
+                        <div class="flex items-center gap-2">
                             <button type="button"
-                                    class="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-5 py-2.5 text-sm font-semibold text-purple-600 shadow-sm">
+                                    class="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-xs font-medium text-purple-600 shadow-sm">
                                 <i class="fa-regular fa-pen-to-square"></i>
                                 Editar
                             </button>
 
                             <button type="button"
-                                    class="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-5 py-2.5 text-sm font-semibold text-red-600 shadow-sm">
+                                    class="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-xs font-medium text-red-600 shadow-sm">
                                 <i class="fa-regular fa-trash-can"></i>
                                 Excluir
                             </button>
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-1 gap-5 lg:grid-cols-2">
+                    <div class="grid grid-cols-1 gap-4 lg:grid-cols-2">
                         @foreach($camposResumo as $campo)
-                            <div class="rounded-2xl border border-slate-200 bg-white p-5">
-                                <div class="flex gap-5">
-                                    <div class="flex h-16 w-16 shrink-0 items-center justify-center rounded-xl bg-purple-100 text-3xl text-purple-600">
+                            <div class="rounded-xl border border-slate-200 bg-white p-4">
+                                <div class="flex gap-4">
+                                    <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-purple-100 text-xl text-purple-600">
                                         <i class="{{ $campo['icon'] }}"></i>
                                     </div>
 
                                     <div class="min-w-0">
-                                        <h3 class="text-lg font-bold text-slate-950">
+                                        <h3 class="text-base font-semibold text-slate-950">
                                             {{ $campo['preview'] }}
                                         </h3>
 
                                         <p
                                             id="preview_{{ $campo['id'] }}"
-                                            class="mt-2 whitespace-pre-line text-base leading-7 text-slate-500"
+                                            class="mt-1 whitespace-pre-line text-sm leading-6 text-slate-500"
                                         >
                                             {{ old($campo['name'], $resumo->{$campo['name']}) ?: 'Nada informado ainda.' }}
                                         </p>

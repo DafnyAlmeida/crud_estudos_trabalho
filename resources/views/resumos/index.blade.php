@@ -1,6 +1,6 @@
 <x-app-layout>
-    <main class="min-h-screen bg-gray-50 px-8 py-8">
-        <div class="max-w-7xl mx-auto">
+    <main class="min-h-screen bg-gray-50 px-6 py-8 lg:px-10">
+        <div class="mx-auto max-w-7xl">
 
             {{-- Breadcrumb --}}
             <div class="mb-6 flex items-center gap-2 text-sm text-slate-500">

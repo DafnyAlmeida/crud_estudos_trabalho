@@ -13,8 +13,8 @@
         $iconeMateria = $materia->icone_tema ?? 'fa-regular fa-file-lines';
     @endphp
 
-    <main class="min-h-screen bg-gray-50 px-5 py-5">
-        <div class="mx-auto max-w-6xl">
+    <main class="min-h-screen bg-white px-6 py-8 lg:px-10">
+        <div class="mx-auto max-w-7xl">
 
             <form id="form-material" action="{{ route('materiais.store', [$materia->id, $conteudo->id]) }}" method="POST">
                 @csrf
@@ -296,9 +296,9 @@
                                             Editar
                                         </button>
 
-                                        <button type="button" class="flex items-center justify-center gap-2 text-purple-600">
+                                        <button type="button" class="flex items-center justify-center gap-2 text-slate-700">
                                             <i class="fa-solid fa-up-right-from-square"></i>
-                                            Abrir material
+                                            Abrir
                                         </button>
 
                                         <button type="button" class="flex items-center justify-center gap-2 text-red-600">

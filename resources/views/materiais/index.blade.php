@@ -1,89 +1,90 @@
 <x-app-layout>
-    <main class="min-h-screen bg-gray-50 px-8 py-8">
-        <div class="max-w-7xl mx-auto">
+    <main class="min-h-screen bg-white px-6 py-8 lg:px-10">
+        <div class="mx-auto max-w-7xl">
 
-            {{-- Breadcrumb --}}
-            <div class="mb-6 flex items-center gap-2 text-sm text-slate-500">
-                <i class="fa-solid fa-book-open text-purple-600"></i>
+            {{-- CABEÇALHO --}}
+            <div class="mb-10">
+                <div class="mb-6 flex flex-wrap items-center gap-2 text-sm text-slate-500">
+                    <i class="fa-solid fa-book-open text-purple-600"></i>
 
-                <a href="{{ route('dashboard') }}" class="font-medium text-purple-600 hover:underline">
-                    Todas as matérias
-                </a>
+                    <a href="{{ route('dashboard') }}" class="font-medium text-purple-600 hover:underline">
+                        Todas as matérias
+                    </a>
 
-                <span>></span>
+                    <span>></span>
 
-                <i class="{{ $materia->icone_tema }} text-purple-600"></i>
+                    <i class="{{ $materia->icone_tema }} text-purple-600"></i>
 
-                <a href="{{ route('materias.show', $materia) }}" class="font-medium text-purple-600 hover:underline">
-                    {{ $materia->nome }}
-                </a>
+                    <a href="{{ route('materias.show', $materia) }}" class="font-medium text-purple-600 hover:underline">
+                        {{ $materia->nome }}
+                    </a>
 
-                <span>></span>
+                    <span>></span>
 
-                <a href="{{ route('conteudos.show', [$materia, $conteudo]) }}" class="font-medium text-purple-600 hover:underline">
-                    {{ $conteudo->nome }}
-                </a>
+                    <a href="{{ route('conteudos.show', [$materia, $conteudo]) }}" class="font-medium text-purple-600 hover:underline">
+                        {{ $conteudo->nome }}
+                    </a>
 
-                <span>></span>
+                    <span>></span>
 
-                <p>Materiais</p>
-            </div>
+                    <p>Materiais</p>
+                </div>
 
-            {{-- CONTEÚDO --}}
-            <div class="space-y-8">
-
-                {{-- TOPO --}}
-                <div class="flex items-center justify-between">
-                    <div>
-                        <h1 class="text-4xl font-bold text-slate-950">
+                <div class="flex items-end justify-between gap-8">
+                    <div class="max-w-xl">
+                        <h1 class="text-4xl font-bold tracking-tight text-slate-950">
                             Materiais
                         </h1>
 
-                        <p class="mt-3 max-w-2xl text-slate-500">
-                            Veja os materiais cadastrados para este conteúdo.
+                        <p class="mt-4 text-sm leading-6 text-slate-500">
+                            Veja e gerencie os materiais cadastrados para este conteúdo.
                         </p>
                     </div>
 
                     <a href="{{ route('materiais.create', ['materia' => $materia->id, 'conteudo' => $conteudo->id]) }}"
-                       class="inline-flex items-center gap-2 rounded-xl bg-purple-600 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-purple-200 transition hover:bg-purple-700">
+                       class="inline-flex items-center gap-2 rounded-xl bg-purple-600 px-5 py-3 text-sm font-medium text-white shadow-sm transition hover:bg-purple-700">
                         <i class="fa-solid fa-plus"></i>
                         Adicionar material
                     </a>
                 </div>
+            </div>
 
-                {{-- CARDS DOS MATERIAIS --}}
-                <div class="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
+            {{-- CARDS DOS MATERIAIS --}}
+            <div class="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
 
-                    @forelse($materiais as $material)
-                        @php
-                            $tipo = strtolower($material->tipo ?? '');
-                            $link = $material->link;
+                @forelse($materiais as $material)
+                    @php
+                        $tipo = strtolower($material->tipo ?? '');
+                        $link = $material->link;
 
-                            $youtubeEmbed = null;
-                            $driveEmbed = null;
+                        $youtubeEmbed = null;
+                        $driveEmbed = null;
 
-                            if ($link) {
-                                if (str_contains($link, 'youtube.com/watch?v=')) {
-                                    $videoId = explode('v=', $link)[1];
-                                    $videoId = explode('&', $videoId)[0];
-                                    $youtubeEmbed = 'https://www.youtube.com/embed/' . $videoId;
-                                }
-
-                                if (str_contains($link, 'youtu.be/')) {
-                                    $videoId = explode('youtu.be/', $link)[1];
-                                    $videoId = explode('?', $videoId)[0];
-                                    $youtubeEmbed = 'https://www.youtube.com/embed/' . $videoId;
-                                }
-
-                                if (str_contains($link, 'drive.google.com/file/d/')) {
-                                    $driveId = explode('/d/', $link)[1];
-                                    $driveId = explode('/', $driveId)[0];
-                                    $driveEmbed = 'https://drive.google.com/file/d/' . $driveId . '/preview';
-                                }
+                        if ($link) {
+                            if (str_contains($link, 'youtube.com/watch?v=')) {
+                                $videoId = explode('v=', $link)[1];
+                                $videoId = explode('&', $videoId)[0];
+                                $youtubeEmbed = 'https://www.youtube.com/embed/' . $videoId;
                             }
-                        @endphp
 
-                        <div class="group overflow-hidden rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-xl">
+                            if (str_contains($link, 'youtu.be/')) {
+                                $videoId = explode('youtu.be/', $link)[1];
+                                $videoId = explode('?', $videoId)[0];
+                                $youtubeEmbed = 'https://www.youtube.com/embed/' . $videoId;
+                            }
+
+                            if (str_contains($link, 'drive.google.com/file/d/')) {
+                                $driveId = explode('/d/', $link)[1];
+                                $driveId = explode('/', $driveId)[0];
+                                $driveEmbed = 'https://drive.google.com/file/d/' . $driveId . '/preview';
+                            }
+                        }
+                    @endphp
+
+                    <div class="group flex min-h-[400px] flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-xl">
+
+                        {{-- CONTEÚDO DO CARD --}}
+                        <div class="flex flex-1 flex-col p-6">
 
                             {{-- PREVIEW --}}
                             <div class="relative mb-6 h-52 overflow-hidden rounded-2xl bg-purple-50">
@@ -156,7 +157,7 @@
 
                             {{-- INFORMAÇÕES --}}
                             <div>
-                                <h3 class="text-xl font-bold leading-snug text-slate-900">
+                                <h3 class="line-clamp-2 text-xl font-semibold leading-snug text-slate-900">
                                     {{ $material->titulo }}
                                 </h3>
 
@@ -164,28 +165,23 @@
                                     {{ $material->descricao ?? 'Sem descrição cadastrada.' }}
                                 </p>
                             </div>
+                        </div>
 
-                            {{-- AÇÕES --}}
-                            <div class="mt-6 flex items-center justify-between border-t border-slate-200 pt-5">
-
+                        {{-- BOTÕES FIXOS NO FINAL --}}
+                        @if($material->link)
+                            <div class="mt-auto grid grid-cols-3 border-t border-slate-100">
                                 <a href="{{ route('materiais.edit', ['materia' => $materia->id, 'conteudo' => $conteudo->id, 'material' => $material->id]) }}"
-                                   class="inline-flex items-center gap-2 text-sm font-semibold text-purple-600 transition hover:text-purple-800">
+                                   class="flex h-12 items-center justify-center gap-2 border-r border-slate-100 text-sm font-medium text-purple-600 transition hover:bg-purple-50">
                                     <i class="fa-regular fa-pen-to-square"></i>
                                     Editar
                                 </a>
 
-                                <div class="h-6 w-px bg-slate-200"></div>
-
-                                @if($material->link)
-                                    <a href="{{ $material->link }}"
-                                       target="_blank"
-                                       class="inline-flex items-center gap-2 text-sm font-semibold text-purple-600 hover:text-purple-800">
-                                        <i class="fa-solid fa-arrow-up-right-from-square"></i>
-                                        Abrir material
-                                    </a>
-
-                                    <div class="h-6 w-px bg-slate-200"></div>
-                                @endif
+                                <a href="{{ $material->link }}"
+                                   target="_blank"
+                                   class="flex h-12 items-center justify-center gap-2 border-r border-slate-100 text-sm font-medium text-slate-700 transition hover:bg-slate-50">
+                                    <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                                    Abrir
+                                </a>
 
                                 <form action="{{ route('materiais.destroy', [$materia, $conteudo, $material]) }}"
                                       method="POST"
@@ -194,30 +190,52 @@
                                     @method('DELETE')
 
                                     <button type="submit"
-                                            class="inline-flex items-center gap-2 text-sm font-semibold text-purple-600 transition hover:text-red-600">
+                                            class="flex h-12 w-full items-center justify-center gap-2 text-sm font-medium text-red-500 transition hover:bg-red-50">
                                         <i class="fa-regular fa-trash-can"></i>
                                         Excluir
                                     </button>
                                 </form>
                             </div>
-                        </div>
-                    @empty
-                        <div class="col-span-full rounded-2xl border border-dashed border-slate-300 bg-white p-10 text-center">
-                            <div class="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-purple-100 text-purple-600">
-                                <i class="fa-regular fa-folder-open text-2xl"></i>
+                        @else
+                            <div class="mt-auto grid grid-cols-2 border-t border-slate-100">
+                                <a href="{{ route('materiais.edit', ['materia' => $materia->id, 'conteudo' => $conteudo->id, 'material' => $material->id]) }}"
+                                   class="flex h-12 items-center justify-center gap-2 border-r border-slate-100 text-sm font-medium text-purple-600 transition hover:bg-purple-50">
+                                    <i class="fa-regular fa-pen-to-square"></i>
+                                    Editar
+                                </a>
+
+                                <form action="{{ route('materiais.destroy', [$materia, $conteudo, $material]) }}"
+                                      method="POST"
+                                      onsubmit="return confirm('Tem certeza que deseja excluir este material?')">
+                                    @csrf
+                                    @method('DELETE')
+
+                                    <button type="submit"
+                                            class="flex h-12 w-full items-center justify-center gap-2 text-sm font-medium text-red-500 transition hover:bg-red-50">
+                                        <i class="fa-regular fa-trash-can"></i>
+                                        Excluir
+                                    </button>
+                                </form>
                             </div>
+                        @endif
 
-                            <h3 class="text-lg font-bold text-slate-900">
-                                Nenhum material cadastrado
-                            </h3>
-
-                            <p class="mt-2 text-sm text-slate-500">
-                                Adicione PDFs, vídeos, links ou textos para este conteúdo.
-                            </p>
+                    </div>
+                @empty
+                    <div class="col-span-full rounded-2xl border border-dashed border-slate-200 p-8 text-center">
+                        <div class="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-purple-100 text-purple-600">
+                            <i class="fa-regular fa-folder-open text-xl"></i>
                         </div>
-                    @endforelse
 
-                </div>
+                        <h3 class="font-semibold text-slate-900">
+                            Nenhum material cadastrado
+                        </h3>
+
+                        <p class="mt-1 text-sm text-slate-500">
+                            Adicione PDFs, vídeos, links ou textos para este conteúdo.
+                        </p>
+                    </div>
+                @endforelse
+
             </div>
         </div>
     </main>
