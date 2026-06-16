@@ -1,7 +1,6 @@
 <x-app-layout>
     <main class="min-h-screen bg-white px-6 py-8 lg:px-10">
         <div class="mx-auto max-w-7xl">
-
             <div class="mb-10 flex items-end justify-between gap-8">
                 <div class="max-w-xl">
                     <p class="mb-3 text-sm font-medium text-violet-600">
@@ -20,7 +19,7 @@
                 </div>
 
                 <a href="{{ route('materias.create') }}"
-                   class="inline-flex items-center gap-2 rounded-xl bg-violet-600 px-5 py-3 text-sm font-medium text-white shadow-sm transition hover:bg-violet-700">
+                   class="inline-flex items-center gap-2 rounded-xl bg-purple-600 px-5 py-3 text-sm font-medium text-white shadow-sm transition hover:bg-purple-700 ">
                     <i class="fa-solid fa-plus"></i>
                     Adicionar matéria
                 </a>

@@ -216,12 +216,6 @@
 
                                 <span>Lembrar de mim</span>
                             </label>
-
-                            @if (Route::has('password.request'))
-                                <a href="{{ route('password.request') }}" class="text-sm font-semibold text-violet-600 transition hover:text-violet-800">
-                                    Esqueci minha senha
-                                </a>
-                            @endif
                         </div>
 
                         <button
@@ -261,7 +255,7 @@
         </div>
 
         <p class="mt-3 text-center text-xs text-slate-500">
-            © 2024 ApexEdu. Todos os direitos reservados.
+            © 2026 ApexEdu. Todos os direitos reservados.
         </p>
     </main>
 

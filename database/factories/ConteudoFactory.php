@@ -13,12 +13,12 @@ class ConteudoFactory extends Factory
             'materia_id' => Materia::factory(),
 
             'nome' => fake()->randomElement([
-                'Introdução ao conteúdo',
-                'Conceitos fundamentais',
-                'Exercícios principais',
-                'Revisão geral',
-                'Resumo para prova',
-                'Aplicações práticas',
+                'Função exponencial',
+                'Orações subordinadas',
+                'Primeira República',
+                'Pré-socraticos',
+                'Dinâmica',
+                'Ácidos',
             ]),
 
             'descricao' => fake()->paragraph(),

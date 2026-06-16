@@ -78,11 +78,19 @@
                         </p>
                     </div>
 
-                    <a href="{{ route('tarefas.create', [$materia, $conteudo]) }}"
-                    class="inline-flex items-center gap-2 rounded-xl bg-purple-600 px-5 py-3 text-sm font-medium text-white shadow-sm transition hover:bg-purple-700">
-                        <i class="fa-solid fa-plus"></i>
-                        Adicionar tarefa
-                    </a>
+                    <div class="flex gap-3">
+                        <a href="{{ route('conteudos.show', [$materia, $conteudo]) }}"
+                        class="inline-flex items-center justify-center gap-2 rounded-xl border border-purple-100 bg-white px-5 py-3 text-sm font-bold text-purple-600 shadow-sm transition hover:border-purple-200 hover:bg-purple-50">
+                            <i class="fa-solid fa-arrow-left"></i>
+                            Voltar
+                        </a>
+                        
+                        <a href="{{ route('tarefas.create', [$materia, $conteudo]) }}"
+                        class="inline-flex items-center gap-2 rounded-xl bg-purple-600 px-5 py-3 text-sm font-medium text-white shadow-sm transition hover:bg-purple-700">
+                            <i class="fa-solid fa-plus"></i>
+                            Adicionar tarefa
+                        </a>
+                    </div>
                 </div>
             </div>
 
@@ -192,7 +200,6 @@
                         </div>
                     </div>
                 @endforeach
-
             </div>
         </div>
     </main>

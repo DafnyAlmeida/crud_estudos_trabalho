@@ -41,11 +41,18 @@
                     </p>
                 </div>
 
-                <a href="{{ route('resumos.create', [$materia, $conteudo]) }}"
-                   class="inline-flex items-center gap-2 rounded-lg bg-purple-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-purple-700">
-                    <i class="fa-solid fa-plus"></i>
-                    Adicionar resumo
-                </a>
+                <div class="flex gap-3">
+                    <a href="{{ route('conteudos.show', [$materia, $conteudo]) }}"
+                    class="inline-flex items-center justify-center gap-2 rounded-xl border border-purple-100 bg-white px-5 py-3 text-sm font-bold text-purple-600 shadow-sm transition hover:border-purple-200 hover:bg-purple-50">
+                        <i class="fa-solid fa-arrow-left"></i>
+                        Voltar
+                    </a>
+                    <a href="{{ route('resumos.create', [$materia, $conteudo]) }}"
+                       class="inline-flex items-center gap-2 rounded-lg bg-purple-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-purple-700">
+                        <i class="fa-solid fa-plus"></i>
+                        Adicionar resumo
+                    </a>
+                </div>
             </div>
 
             <div class="space-y-5">
@@ -148,9 +155,19 @@
                         </div>
                     </div>
                 @empty
-                    <p class="rounded-xl border border-dashed border-slate-300 bg-white p-4 text-center text-sm text-slate-500">
-                        Nenhum resumo cadastrado.
-                    </p>
+                    <div class="col-span-full rounded-2xl border border-dashed border-slate-200 p-8 text-center">
+                        <div class="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-purple-100 text-purple-600">
+                            <i class="fa-regular fa-folder-open text-xl"></i>
+                        </div>
+
+                        <h3 class="font-semibold text-slate-900">
+                            Nenhum resumo cadastrado
+                        </h3>
+
+                        <p class="mt-1 text-sm text-slate-500">
+                            Adicione textos para este resumo.
+                        </p>
+                    </div>
                 @endforelse
             </div>
         </div>

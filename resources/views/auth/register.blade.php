@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Criar conta - ApexEdu</title>
 
+    <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}">
+
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600,700,800" rel="stylesheet" />
 
@@ -19,7 +21,7 @@
 
     <main class="flex h-screen flex-col items-center justify-center px-4 py-4">
 
-        <div class="grid h-[535px] w-full max-w-4xl overflow-hidden rounded-[1.5rem] border border-slate-200 bg-white shadow-xl shadow-slate-200/70 lg:grid-cols-[0.8fr_1.2fr]">
+        <div class="grid h-[590px] w-full max-w-5xl overflow-hidden rounded-[1.7rem] border border-slate-200 bg-white shadow-xl shadow-slate-200/70 lg:grid-cols-[0.8fr_1.2fr]">
 
             <!-- Lado esquerdo menor -->
             <section class="relative hidden overflow-hidden bg-gradient-to-br from-white via-violet-50 to-white px-9 py-8 lg:block">
@@ -239,7 +241,7 @@
         </div>
 
         <p class="mt-3 text-center text-xs text-slate-500">
-            © 2024 ApexEdu. Todos os direitos reservados.
+            © 2026 ApexEdu. Todos os direitos reservados.
         </p>
     </main>
 
