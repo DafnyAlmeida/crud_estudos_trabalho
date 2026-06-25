@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Materia;
 use App\Models\Conteudo;
 use App\Models\Material;
-
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\StoreMaterialRequest;
 use App\Http\Requests\UpdateMaterialRequest;
@@ -18,9 +17,7 @@ class MaterialController extends Controller
             abort(403);
         }
 
-        if ((int) $conteudo->materia_id !== (int) $materia->id) {
-            abort(404);
-        }
+        $conteudo = $materia->conteudos()->findOrFail($conteudo->id);
 
         $materiais = $conteudo->materiais()->latest()->get();
 
@@ -33,24 +30,23 @@ class MaterialController extends Controller
             abort(403);
         }
 
-        if ((int) $conteudo->materia_id !== (int) $materia->id) {
-            abort(404);
-        }
+        $conteudo = $materia->conteudos()->findOrFail($conteudo->id);
 
-        return view("materiais.create", compact("materia", "conteudo"));
+        return view('materiais.create', compact('materia', 'conteudo'));
     }
 
     public function store(StoreMaterialRequest $request, Materia $materia, Conteudo $conteudo)
     {
-        $dados = $request->validated();
+        if ((int) $materia->user_id !== (int) Auth::id()) {
+            abort(403);
+        }
 
-        $conteudo->materiais()->create($dados);
+        $conteudo = $materia->conteudos()->findOrFail($conteudo->id);
+
+        $conteudo->materiais()->create($request->validated());
 
         return redirect()
-            ->route('materiais.index', [
-                'materia' => $materia->id,
-                'conteudo' => $conteudo->id,
-            ])
+            ->route('materiais.index', [$materia, $conteudo])
             ->with('success', 'Material cadastrado com sucesso!');
     }
 
@@ -60,13 +56,9 @@ class MaterialController extends Controller
             abort(403);
         }
 
-        if ((int) $conteudo->materia_id !== (int) $materia->id) {
-            abort(404);
-        }
+        $conteudo = $materia->conteudos()->findOrFail($conteudo->id);
 
-        if ((int) $material->conteudo_id !== (int) $conteudo->id) {
-            abort(404);
-        }
+        $material = $conteudo->materiais()->findOrFail($material->id);
 
         return view('materiais.edit', compact('materia', 'conteudo', 'material'));
     }
@@ -77,23 +69,14 @@ class MaterialController extends Controller
             abort(403);
         }
 
-        if ((int) $conteudo->materia_id !== (int) $materia->id) {
-            abort(404);
-        }
+        $conteudo = $materia->conteudos()->findOrFail($conteudo->id);
 
-        if ((int) $material->conteudo_id !== (int) $conteudo->id) {
-            abort(404);
-        }
+        $material = $conteudo->materiais()->findOrFail($material->id);
 
-        $dados = $request->validated();
-
-        $material->update($dados);
+        $material->update($request->validated());
 
         return redirect()
-            ->route('materiais.index', [
-                'materia' => $materia->id,
-                'conteudo' => $conteudo->id,
-            ])
+            ->route('materiais.index', [$materia, $conteudo])
             ->with('success', 'Material atualizado com sucesso!');
     }
 
@@ -103,13 +86,9 @@ class MaterialController extends Controller
             abort(403);
         }
 
-        if ((int) $conteudo->materia_id !== (int) $materia->id) {
-            abort(404);
-        }
+        $conteudo = $materia->conteudos()->findOrFail($conteudo->id);
 
-        if ((int) $material->conteudo_id !== (int) $conteudo->id) {
-            abort(404);
-        }
+        $material = $conteudo->materiais()->findOrFail($material->id);
 
         $material->delete();
 

@@ -14,16 +14,13 @@ use App\Http\Controllers\Controller;
 
 class TarefaController extends Controller
 {
-
     public function index(Materia $materia, Conteudo $conteudo)
     {
         if ((int) $materia->user_id !== (int) Auth::id()) {
             abort(403);
         }
 
-        if ((int) $conteudo->materia_id !== (int) $materia->id) {
-            abort(404);
-        }
+        $conteudo = $materia->conteudos()->findOrFail($conteudo->id);
 
         $tarefas = $conteudo->tarefas()
             ->orderByRaw('CASE WHEN data_entrega IS NULL THEN 1 ELSE 0 END')
@@ -40,27 +37,24 @@ class TarefaController extends Controller
             abort(403);
         }
 
-        if ((int) $conteudo->materia_id !== (int) $materia->id) {
-            abort(404);
-        }
-        
+        $conteudo = $materia->conteudos()->findOrFail($conteudo->id);
+
         return view("tarefas.create", compact("materia", "conteudo"));
     }
 
     public function store(StoreTarefaRequest $request, Materia $materia, Conteudo $conteudo)
     {
-        $dados = $request->validated();
+        if ((int) $materia->user_id !== (int) Auth::id()) {
+            abort(403);
+        }
 
-        $conteudo->tarefas()->create($dados);
+        $conteudo = $materia->conteudos()->findOrFail($conteudo->id);
+
+        $conteudo->tarefas()->create($request->validated());
 
         return redirect()
             ->route('tarefas.index', [$materia, $conteudo])
             ->with('success', 'Tarefa criada com sucesso!');
-    }
-
-    public function show(string $id)
-    {
-        //
     }
 
     public function edit(Materia $materia, Conteudo $conteudo, Tarefa $tarefa)
@@ -69,14 +63,10 @@ class TarefaController extends Controller
             abort(403);
         }
 
-        if ((int) $conteudo->materia_id !== (int) $materia->id) {
-            abort(404);
-        }
+        $conteudo = $materia->conteudos()->findOrFail($conteudo->id);
 
-        if ((int) $tarefa->conteudo_id !== (int) $conteudo->id) {
-            abort(404);
-        }
-        
+        $tarefa = $conteudo->tarefas()->findOrFail($tarefa->id);
+
         return view('tarefas.edit', [
             'materia' => $materia,
             'conteudo' => $conteudo,
@@ -86,15 +76,18 @@ class TarefaController extends Controller
 
     public function update(UpdateTarefaRequest $request, Materia $materia, Conteudo $conteudo, Tarefa $tarefa)
     {
-        $dados = $request->validated();
+        if ((int) $materia->user_id !== (int) Auth::id()) {
+            abort(403);
+        }
 
-        $tarefa->update($dados);
+        $conteudo = $materia->conteudos()->findOrFail($conteudo->id);
+
+        $tarefa = $conteudo->tarefas()->findOrFail($tarefa->id);
+
+        $tarefa->update($request->validated());
 
         return redirect()
-            ->route('tarefas.index', [
-                'materia' => $materia->id,
-                'conteudo' => $conteudo->id,
-            ])
+            ->route('tarefas.index', [$materia, $conteudo])
             ->with('success', 'Tarefa atualizada com sucesso!');
     }
 
@@ -104,13 +97,9 @@ class TarefaController extends Controller
             abort(403);
         }
 
-        if ((int) $conteudo->materia_id !== (int) $materia->id) {
-            abort(404);
-        }
+        $conteudo = $materia->conteudos()->findOrFail($conteudo->id);
 
-        if ((int) $tarefa->conteudo_id !== (int) $conteudo->id) {
-            abort(404);
-        }
+        $tarefa = $conteudo->tarefas()->findOrFail($tarefa->id);
 
         $tarefa->delete();
 

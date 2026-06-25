@@ -10,8 +10,6 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\StoreResumoRequest;
 use App\Http\Requests\UpdateResumoRequest;
 
-use App\Http\Controllers\Controller;
-
 class ResumoController extends Controller
 {
     public function index(Materia $materia, Conteudo $conteudo)
@@ -20,9 +18,7 @@ class ResumoController extends Controller
             abort(403);
         }
 
-        if ((int) $conteudo->materia_id !== (int) $materia->id) {
-            abort(404);
-        }
+        $conteudo = $materia->conteudos()->findOrFail($conteudo->id);
 
         $resumos = $conteudo->resumos()->latest()->get();
 
@@ -31,19 +27,23 @@ class ResumoController extends Controller
 
     public function create(Materia $materia, Conteudo $conteudo)
     {
-        if ($materia->user_id !== (int) Auth::id()) {
+        if ((int) $materia->user_id !== (int) Auth::id()) {
             abort(403);
         }
 
-        if ($conteudo->materia_id !== $materia->id) {
-            abort(404);
-        }
+        $conteudo = $materia->conteudos()->findOrFail($conteudo->id);
 
         return view("resumos.create", compact("materia", "conteudo"));
     }
 
     public function store(StoreResumoRequest $request, Materia $materia, Conteudo $conteudo)
     {
+        if ((int) $materia->user_id !== (int) Auth::id()) {
+            abort(403);
+        }
+
+        $conteudo = $materia->conteudos()->findOrFail($conteudo->id);
+
         $dados = $request->validated();
 
         $dados['area'] = $conteudo->area;
@@ -51,32 +51,33 @@ class ResumoController extends Controller
         $conteudo->resumos()->create($dados);
 
         return redirect()
-            ->route('resumos.index', [
-                'materia' => $materia->id,
-                'conteudo' => $conteudo->id,
-            ])
+            ->route('resumos.index', [$materia, $conteudo])
             ->with('success', 'Resumo criado com sucesso!');
     }
 
     public function edit(Materia $materia, Conteudo $conteudo, Resumo $resumo)
     {
-        if ($materia->user_id !== (int) Auth::id()) {
+        if ((int) $materia->user_id !== (int) Auth::id()) {
             abort(403);
         }
 
-        if ($conteudo->materia_id !== $materia->id) {
-            abort(404);
-        }
+        $conteudo = $materia->conteudos()->findOrFail($conteudo->id);
 
-        if ($resumo->conteudo_id !== $conteudo->id) {
-            abort(404);
-        }
+        $resumo = $conteudo->resumos()->findOrFail($resumo->id);
 
         return view("resumos.edit", compact("materia", "conteudo", "resumo"));
     }
 
     public function update(UpdateResumoRequest $request, Materia $materia, Conteudo $conteudo, Resumo $resumo)
     {
+        if ((int) $materia->user_id !== (int) Auth::id()) {
+            abort(403);
+        }
+
+        $conteudo = $materia->conteudos()->findOrFail($conteudo->id);
+
+        $resumo = $conteudo->resumos()->findOrFail($resumo->id);
+
         $dados = $request->validated();
 
         $dados['area'] = $conteudo->area;
@@ -84,26 +85,19 @@ class ResumoController extends Controller
         $resumo->update($dados);
 
         return redirect()
-            ->route('resumos.index', [
-                'materia' => $materia->id,
-                'conteudo' => $conteudo->id,
-            ])
+            ->route('resumos.index', [$materia, $conteudo])
             ->with('success', 'Resumo atualizado com sucesso!');
     }
 
     public function destroy(Materia $materia, Conteudo $conteudo, Resumo $resumo)
     {
-        if ($materia->user_id !== Auth::id()) {
+        if ((int) $materia->user_id !== (int) Auth::id()) {
             abort(403);
         }
 
-        if ($conteudo->materia_id !== $materia->id) {
-            abort(404);
-        }
+        $conteudo = $materia->conteudos()->findOrFail($conteudo->id);
 
-        if ($resumo->conteudo_id !== $conteudo->id) {
-            abort(404);
-        }
+        $resumo = $conteudo->resumos()->findOrFail($resumo->id);
 
         $resumo->delete();
 

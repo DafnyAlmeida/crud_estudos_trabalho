@@ -6,15 +6,14 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('resumos', function (Blueprint $table) {
             $table->id();
 
-            $table->foreignId("conteudo_id")->constrained("conteudos")->cascadeOnDelete();
+            $table->foreignId("conteudo_id")
+                ->constrained("conteudos")
+                ->cascadeOnDelete();
 
             $table->string('area')->nullable();
             $table->string('nome');
@@ -32,9 +31,6 @@ return new class extends Migration
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('resumos');

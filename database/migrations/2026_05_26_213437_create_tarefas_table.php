@@ -18,7 +18,10 @@ return new class extends Migration
             $table->string('titulo');
             $table->text('descricao')->nullable();
 
-            $table->enum('status', ['a_fazer', 'fazendo', 'feito'
+            $table->enum('status', [
+                'a_fazer', 
+                'fazendo', 
+                'feito'
             ])->default('a_fazer');
 
             $table->enum('prioridade', [

@@ -104,9 +104,7 @@ class ConteudoController extends Controller
             abort(403);
         }
 
-        if ((int) $conteudo->materia_id !== (int) $materia->id) {
-            abort(404);
-        }
+        $conteudo = $materia->conteudos()->findOrFail($conteudo->id);
 
         return view("conteudos.show", compact('materia', 'conteudo'));
     }
@@ -117,9 +115,7 @@ class ConteudoController extends Controller
             abort(403);
         }
 
-        if ((int) $conteudo->materia_id !== (int) $materia->id) {
-            abort(404);
-        }
+        $conteudo = $materia->conteudos()->findOrFail($conteudo->id);
 
         $areas = $this->areasConteudo();
 
@@ -135,6 +131,12 @@ class ConteudoController extends Controller
 
     public function update(UpdateConteudoRequest $request, Materia $materia, Conteudo $conteudo)
     {
+        if ((int) $materia->user_id !== (int) Auth::id()) {
+            abort(403);
+        }
+
+        $conteudo = $materia->conteudos()->findOrFail($conteudo->id);
+        
         $dados = $request->validated();
 
         $conteudo->update($dados);
@@ -150,9 +152,7 @@ class ConteudoController extends Controller
             abort(403);
         }
 
-        if ((int) $conteudo->materia_id !== (int) $materia->id) {
-            abort(404);
-        }
+        $conteudo = $materia->conteudos()->findOrFail($conteudo->id);
 
         $conteudo->delete();
 

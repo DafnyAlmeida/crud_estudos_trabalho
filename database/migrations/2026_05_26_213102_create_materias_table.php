@@ -11,12 +11,17 @@ return new class extends Migration
         Schema::create('materias', function (Blueprint $table) {
             $table->id();
 
-            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('user_id')
+                ->constrained()
+                ->cascadeOnDelete();
 
-            $table->enum('status', ['ativa', 'arquivada'])->default('ativa');
+            $table->enum('status', [
+                'ativa', 
+                'arquivada'
+            ])->default('ativa');
 
-            $table->string("nome");
-            $table->text("descricao")->nullable();
+            $table->string('nome');
+            $table->text('descricao')->nullable();
             $table->string('cor_tema')->nullable();
             $table->string('icone_tema')->nullable();
 

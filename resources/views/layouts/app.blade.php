@@ -33,6 +33,7 @@
 
             <!-- Page Content -->
             <main>
+                <!-- Importa o arquivo para a mensagem de sucesso ou erro -->
                 <x-toast />
                 {{ $slot }}
             </main>
